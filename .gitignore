@@ -44,3 +44,5 @@ CO2_emissions_*.txt
 CO2_*_ppmv.txt
 emul_inputs_*.res
 updated_CO2_*.res
+
+toClaude/*

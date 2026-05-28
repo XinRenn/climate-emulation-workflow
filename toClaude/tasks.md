@@ -10,12 +10,13 @@
 - ✅ **Tasks 1–6** — 全部完成（见下方各任务详情）
 - ✅ **GitHub repo 建立** — `https://github.com/XinRenn/climate-emulation-workflow`（private）
   - 本地路径：`NWS-PDRA/climate_emulation_workflow/`
-  - 包含 Stages 1–4 全部代码，已 push 到 main branch
-- ✅ **Historical_emissions 正确值确认** — **283.962 GtC**（见 Task 7a）
+- ✅ **Task 7a** — `Historical_emissions = 283.962 GtC` 已手动修改
+- ✅ **Task 7c + 7d（Stage 1）** — 已运行，一切顺利
+- ✅ **脚本重命名** — 用数字前缀标注步骤顺序（如 `1.xxx.ipynb`）；README 路径待明天 update
 
-### 待完成
-- ⏳ **Task 7a** — 修改 `climate_emulation_workflow/1_CO2_model/1.Convoluted_response_function.ipynb` 中的 `Historical_emissions`
-- ⏳ **Tasks 7c–7j** — 重跑完整 workflow（7e/7f/7h 需手动 MATLAB）
+### 待完成（明天继续）
+- ⏳ **Update README** — 因脚本已重命名，需更新 README 中的文件名和路径
+- ⏳ **Tasks 7e–7j（Stage 2 起）** — 继续修改并运行 Stage 2，之后 Stage 3
 
 ---
 
@@ -89,48 +90,21 @@ GSL 阈值：-28 m（来自 CO2_GSL_SSP.png 图 2 黑色虚线）
 
 ---
 
-### 7a — 修复 Historical_emissions ⏳ 待执行（Claude）
+### 7a — 修复 Historical_emissions ✅ 完成（手动）
 
-**文件（新 repo）：** `climate_emulation_workflow/1_CO2_model/1.Convoluted_response_function.ipynb`
-**原始文件：** `TONIC-Oligocene/Emulator_Xin/2025_Bristol_5D_v002_Xin/CO2_calculation/Convoluted_response_function.ipynb`
-
-修改：
-```python
-# 改前：
-Historical_emissions = 355.558
-# 改后：
-Historical_emissions = 283.962  # fossil-only cumulative CO2 1765-2000 (GtC), Lord et al. 2017
-```
-
-> 🔧 由 Claude 修改（先备份再改），修改前告知用户。需同时修改新 repo 和原始文件。
+`climate_emulation_workflow/1_CO2_model/1.Convoluted_response_function.ipynb` 中已改为 `283.962`。
 
 ---
 
-### 7c — 重跑 CO₂ ppmv 计算（8 个 scenarios）⏳ 待执行（Claude）
+### 7c — 重跑 CO₂ ppmv 计算（8 个 scenarios）✅ 完成
 
-**文件：** `climate_emulation_workflow/1_CO2_model/1.Convoluted_response_function.ipynb`（7a 修复后）
-
-输出（gitignored，在原始工作目录生成）：
-- `SSP/CO2_SSP1-19_ppmv.txt`
-- `SSP/CO2_SSP1-26_ppmv.txt`
-- `SSP/CO2_SSP2-45_ppmv.txt`
-- `SSP/CO2_SSP3-70_ppmv.txt`
-- `SSP/CO2_SSP4-60_ppmv.txt`
-- `SSP/CO2_SSP5-34_ppmv.txt`
-- `SSP/CO2_SSP5-85_ppmv.txt`
-- `SSP/CO2_10000pgc_ppmv.txt`
-
-> 🔧 由 Claude 执行（`jupyter nbconvert --to notebook --execute`，在 `1_CO2_model/` 目录下）。
+`1_CO2_model/1.Convoluted_response_function.ipynb` 已运行，输出 `SSP/CO2_*_ppmv.txt`。
 
 ---
 
-### 7d — 重跑 CO₂ ppmv → 1 Ma 格式转换 ⏳ 待执行（Claude）
+### 7d — 重跑 CO₂ ppmv → 1 Ma 格式转换 ✅ 完成
 
-**文件：** `climate_emulation_workflow/1_CO2_model/2.make_CO2_ppmv_data_in_ka.ipynb`
-
-输出路径（已由用户修改）：`../2_GSL_model/ForcingData/`
-
-> 🔧 由 Claude 执行（先备份再运行）。
+`1_CO2_model/2.make_CO2_ppmv_data_in_ka.ipynb` 已运行，输出到 `2_GSL_model/ForcingData/`。
 
 ---
 

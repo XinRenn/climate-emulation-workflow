@@ -27,18 +27,18 @@ insol_data_dat = importdata('ForcingData/Insol_Laskar_jul_65N_0.5-1ma.res');
 insol_data_500k_BPAP = vertcat(insol_data_dat.data(1:501,2),insol_data_dat.data(501,2),insol_data_dat.data(502:end,2));
 
 % ===== SCENARIO CONFIGURATION — edit this block to change scenarios =====
-scenario_names = {'SSP1-26', 'SSP2-45', 'SSP3-70', 'SSP5-85', '10000pgc'};
+scenario_names = {'SSP1-19', 'SSP1-26', 'SSP2-45', 'SSP3-70', 'SSP5-85', '10000pgc'};
 co2_path     = '../1_CO2_model/SSP/concentration_ppmv/';
 results_path = 'Results/';
 plots_path   = 'Plots/';
 Fig_name = 'Temp_anomaly_LHC_from_CGSLM';
-emul_path    = [results_path, 'emul_inputs/'];  % emulator input files (per LHC member × scenario)
+emul_path    = [results_path, 'emul_inputs_raw/'];  % emulator input files (per LHC member × scenario)
 lhc_path     = [results_path, 'LHCsamps/'];     % LHC ensemble summary files
 model_path   = [results_path, 'model/'];         % single best-fit model outputs
-ssp_colours = {[0 0.5 0], [0 0.45 0.7], [1 0.5 0], [0.8 0 0], [0.5 0 0]};
-ssp_colours_light = {[0.8 0.9 0.8], [0.8 0.875 0.95], [1 0.9 0.8], [1 0.9 0.9], [1 0.8 0.8]};
+ssp_colours = {[1 1 0], [0 0.5 0], [0 0.45 0.7], [1 0.5 0], [0.8 0 0], [0.5 0 0]};
+ssp_colours_light = {[1 1 0.8], [0.8 0.9 0.8], [0.8 0.875 0.95], [1 0.9 0.8], [1 0.9 0.9], [1 0.8 0.8]};
 % Samp_orbits tags in ForcingData/ (natural uses 'zero_emissions'; 10000pgc uses uppercase PGC in file name)
-samp_orbit_tags = {'zero_emissions', 'SSP1-26', 'SSP2-45', 'SSP3-70', 'SSP5-85', '10000PGC'};
+samp_orbit_tags = {'zero_emissions', 'SSP1-19', 'SSP1-26', 'SSP2-45', 'SSP3-70', 'SSP5-85', '10000PGC'};
 % Short names for emul_inputs output files (strip dashes)
 emul_out_tags = [{'natural'}, cellfun(@(s) strrep(s, '-', ''), scenario_names, 'UniformOutput', false)];
 % ========================================================================

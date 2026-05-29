@@ -18,11 +18,12 @@ Folder: `1_CO2_model/`
 
 | Step | Notebook/Script | Output |
 |------|----------------|--------|
-| 1a | `Create_SSP_emissions.ipynb` | `SSP/CO2_emissions_{scenario}.txt` |
-| 1b | `Convoluted_response_function.ipynb` | `SSP/CO2_{scenario}_ppmv.txt` |
-| 1c | `make_CO2_ppmv_data_in_ka.ipynb` | `updated_CO2_from_SL_1myr_AP_from800kyrBP—RCP_Xin.res` |
+| 1a | `SSP/0.Create_SSP_emissions.ipynb` | `SSP/raw_emissions/CO2_emissions_{scenario}.txt` |
+| 1a | `SSP/0.create_10000pgc_emission.ipynb` | `SSP/raw_emissions/CO2_emissions_10000pgc.txt` |
+| 1b | `1.Convoluted_response_function.ipynb` | `SSP/concentration_ppmv/CO2_{scenario}_ppmv.txt` |
+| 1c | `2.make_CO2_ppmv_data_in_ka.ipynb` | `SSP/concentration_ppmv/CO2_data_{scenario}_0-1ma.res` |
 
-Key parameter: `Historical_emissions = 283.962 GtC` (fossil-only cumulative 1765–1999, following Lord et al. 2017).
+Key parameter: `Historical_emissions = 283.962 GtC` (fossil-only cumulative 1765–2000, following Lord et al. 2017).
 
 ### Stage 2 — GSL (Global Sea Level) model
 Folder: `2_GSL_model/`
@@ -31,11 +32,11 @@ Folder: `2_GSL_model/`
 |------|--------|-------|
 | 2a | `Archer_Ganopolski_2005_rcp_4_1myrAP_LHC_sens_test_atka_Xin.m` | **MATLAB — run manually** |
 | 2b | `plot_Figure3_4a_Xin.m` | **MATLAB — run manually** |
-| 2c | `inputX/orig/Create_Samp_SSP_upd_1myr_AP.ipynb` | Python |
-| 2d | `updated_CO2_from_RSL_rcp_4_1myrAP_from800kyrBP_RCP_LHC_Xin.m` | **MATLAB — run manually** |
+| 2c | `1.Create_Samp_SSP_upd_1myr_AP.ipynb` | Python |
+| 2d | `updated_CO2_from_RSL_rcp_4_1myrAP_from800kyrBP_RCP_Xin.m` | **MATLAB — run manually** |
 | 2e | `update_CO2_LHC_members.ipynb` | Python |
 
-Output: `Results/emul_inputs_{scenario}.{member}.updated.res` (90 members × 6 scenarios)
+Output: `Results/emul_inputs_{scenario}.{member}.updated.res` (90 members × 8 non-natural scenarios)
 
 ### Stage 3 — Emulator training and prediction
 Folder: `3_emulator/`

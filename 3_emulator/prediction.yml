@@ -1,10 +1,12 @@
 model_run_name: "tas_modhighice"
 random_state: 29
 
-training_file_path: "/Users/bo20541/Library/CloudStorage/OneDrive-UniversityofBristol/TONIC-Oligocene/NWS_emulation/training_data/"
-X_input_file_name: "emul_in_X_modhighice.res"
-Y_input_file_name: "emul_in_Y_modhighice.nc"
+training_file_path: "training_data/"
+X_input_file_name: ["emul_in_X_modhighice.res"]
+Y_input_file_name: ["emul_in_Y_modhighice.nc"]
 X_column_names: ["co2", "obliquity", "esinw", "ecosw", "ice"]
+
+output_dir: "trained_model/"
 
 cv:
   folds: 10
@@ -25,23 +27,47 @@ regressor_config:
   whitekernel_noise_level: 1e-2
   whitekernel_noise_level_bounds: [1e-5, 1e1]
 
-forcing_data_path: "/Users/bo20541/Library/CloudStorage/OneDrive-UniversityofBristol/TONIC-Oligocene/Emulator_Xin/2025_Bristol_5D_v002_Xin/Conceptual-GSL/PosivaSKB-master/Results/"
+forcing_data_path: "../2_GSL_model/results/emul_inputs_updatedCO2/"
 forcing_data:
   natural:
-    forcing_input: "emul_inputs_natural.90.updated.res"
-  SSP119:
-    forcing_input: "emul_inputs_SSP119.90.updated.res"
+    kind: pattern
+    forcing_input_pattern: "emul_inputs_natural.{member}.updated.res"
+    member:
+      start: 1
+      end: 90
+      width: 1
   SSP126:
-    forcing_input: "emul_inputs_SSP126.90.updated.res"
+    kind: pattern
+    forcing_input_pattern: "emul_inputs_SSP126.{member}.updated.res"
+    member:
+      start: 1
+      end: 90
+      width: 1
   SSP245:
-    forcing_input: "emul_inputs_SSP245.90.updated.res"
+    kind: pattern
+    forcing_input_pattern: "emul_inputs_SSP245.{member}.updated.res"
+    member:
+      start: 1
+      end: 90
+      width: 1
   SSP370:
-    forcing_input: "emul_inputs_SSP370.90.updated.res"
-  SSP460:
-    forcing_input: "emul_inputs_SSP460.90.updated.res"
-  SSP534:
-    forcing_input: "emul_inputs_SSP534.90.updated.res"
+    kind: pattern
+    forcing_input_pattern: "emul_inputs_SSP370.{member}.updated.res"
+    member:
+      start: 1
+      end: 90
+      width: 1
   SSP585:
-    forcing_input: "emul_inputs_SSP585.90.updated.res"
+    kind: pattern
+    forcing_input_pattern: "emul_inputs_SSP585.{member}.updated.res"
+    member:
+      start: 1
+      end: 90
+      width: 1
   10000PGC:
-    forcing_input: "emul_inputs_10000PGC.90.updated.res"
+    kind: pattern
+    forcing_input_pattern: "emul_inputs_10000PGC.{member}.updated.res"
+    member:
+      start: 1
+      end: 90
+      width: 1

@@ -30,26 +30,41 @@ Folder: `2_GSL_model/`
 
 | Step | Script | Notes |
 |------|--------|-------|
-| 2a | `Archer_Ganopolski_2005_rcp_4_1myrAP_LHC_sens_test_atka_Xin.m` | **MATLAB — run manually** |
-| 2b | `plot_Figure3_4a_Xin.m` | **MATLAB — run manually** |
-| 2c | `1.Create_Samp_SSP_upd_1myr_AP.ipynb` | Python |
-| 2d | `updated_CO2_from_RSL_rcp_4_1myrAP_from800kyrBP_RCP_Xin.m` | **MATLAB — run manually** |
-| 2e | `update_CO2_LHC_members.ipynb` | Python |
+| Run1 | `Run1_Create_Samp_SSP_upd_1myr_AP.ipynb` | Python — creates LHC orbital+ice samples |
+| Run2 | `Run2_AG2005_CGSLM_LH_and_plot.m` | **MATLAB — run manually** — CGSLM + LHC, saves raw emulator inputs |
+| Run3 | `Run3_updated_CO2_from_RSL_LHC.m` | **MATLAB — run manually** — CO₂ correction for glacial sea-level feedback |
+| Run4 | `Run4_update_CO2_LHC_members.ipynb` | Python — applies updated CO₂ across all 90 LHC members |
+| Plot | `Plot_Figure3.1_CO2+GSL.ipynb` | Python — Figure 3.1: CO₂ and GSL time-series for 6 scenarios |
 
-Output: `Results/emul_inputs_{scenario}.{member}.updated.res` (90 members × 8 non-natural scenarios)
+Output structure under `results/`:
+- `results/emul_inputs_raw/` — raw emulator inputs from Run2 (per scenario × 90 members)
+- `results/emul_inputs_updatedCO2/` — CO₂-corrected inputs from Run4 (used by Stage 3)
+- `results/LHCsamps/` — LHC sample files
 
 ### Stage 3 — Emulator training and prediction
 Folder: `3_emulator/`
 
-Runs on server. See `3_emulator/README_server.md` for environment setup.
+Runs on Bristol HPC (BC4) via SLURM. See `3_emulator/README_server.md` for environment setup.
 
 ```bash
-conda activate paleo-emu
-cd 3_emulator/
-python run_prediction.py
+# Submit job on BC4
+conda activate emu
+sbatch submit_prediction.slurm
 ```
 
-Output: NetCDF predictions to `/Volumes/Xin-data/result/` (external drive).
+Each `(var, state)` batch is saved to `outputs/{var}_{state}/` on the server with a `.done` marker on completion. Pull from local Mac after each batch (or at the end):
+
+```bash
+rsync -av --remove-source-files \
+    bo20541@bc4login.acrc.bris.ac.uk:/path/to/3_emulator/outputs/ \
+    /Volumes/Xin-data/NWS_outputs/
+```
+
+Scripts:
+- `run_prediction_slurm.py` — server version (saves to server, pull separately)
+- `run_prediction.py` — local version (moves directly to `target_dir`)
+
+Output: NetCDF predictions in `/Volumes/Xin-data/NWS_outputs/{var}_{state}/` (external drive).
 
 ### Stage 4 — Plots and validation
 Folder: `4_plots/`
@@ -60,27 +75,32 @@ Analysis notebooks for validation and report figures.
 
 ## Scenarios
 
-| Label | Description |
-|-------|-------------|
-| natural | No anthropogenic emissions |
-| SSP1-19 | SSP1-1.9 |
-| SSP1-26 | SSP1-2.6 |
-| SSP2-45 | SSP2-4.5 |
-| SSP3-70 | SSP3-7.0 |
-| SSP4-60 | SSP4-6.0 |
-| SSP5-34 | SSP5-3.4 |
-| SSP5-85 | SSP5-8.5 |
-| 10000pgc | 10,000 PgC extreme scenario |
+6 scenarios used across all stages:
 
-Stages 1–2 are rerun for all **non-natural** scenarios (8 total) when `Historical_emissions` changes.
+| Label | Description | File tag |
+|-------|-------------|----------|
+| natural | No anthropogenic emissions | `natural` |
+| SSP1-26 | SSP1-2.6 | `SSP126` |
+| SSP2-45 | SSP2-4.5 | `SSP245` |
+| SSP3-70 | SSP3-7.0 | `SSP370` |
+| SSP5-85 | SSP5-8.5 | `SSP585` |
+| 10000pgc | 10,000 PgC extreme scenario | `10000PGC` |
+
+> **Note:** `SSP119` forcing files exist in `results/emul_inputs_updatedCO2/` but are excluded from emulator prediction and plotting.
+
+Stages 1–2 are rerun for all **non-natural** scenarios (5 total) when `Historical_emissions` changes.
 
 ---
 
 ## Environment
 
-Python: `conda activate paleo-emu` (see `TONIC-Oligocene/paleo-emu/` for package install).
+| Context | Command |
+|---------|---------|
+| Local Python | `conda activate emu` (or `source TONIC-Oligocene/paleo-emu/.venv/bin/activate`) |
+| Server (BC4) | `conda activate emu` — `paleo_emu` installed from `TONIC-Oligocene/paleo-emu/` |
+| MATLAB | R2022b or later |
 
-MATLAB: R2022b or later.
+`paleo_emu` package: `pip install -e TONIC-Oligocene/paleo-emu/`
 
 ---
 

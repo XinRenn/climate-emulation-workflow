@@ -1,8 +1,7 @@
 # NWS Climate Emulation Workflow
 
-End-to-end workflow for emulating HadCM3 climate over 1 Ma, for post-closure performance assessments of UK nuclear waste repositories.
+End-to-end workflow for emulating HadCM3 climate over 1 Ma, for NWS long-term UK prediction project.
 
-**Reference:** Builds on Lord et al. (2017) and TR-19-09.
 
 ---
 

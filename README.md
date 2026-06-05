@@ -115,25 +115,45 @@ python Run1_extract_uk_sites.py
 | SA | sea  | 16 | −1 |
 | SB | sea  | 15 | +1 |
 
-**Output:** `5_plots/site_data/site_{LA|LB|LC|LD|SA|SB}/{var}_{scen}_site_{site}.txt`  
-Shape: 90 members × 1001 time steps. NWS-compliant: `.txt`, flat structure, metadata header.  
+**Output:** `5_plots/site_data/lowres_results/{var}_{scen}_site_{site}.txt`  
+Shape: 90 members × 1001 time steps. NWS-compliant: `.txt`, flat (no site subdirectories), metadata header.  
 Note: `iceconc` uses sea sites (SA, SB) only.
 
+> **Note on natural scenario:** the `natural` scenario files in `lowres_results/` are taken from an older emulator run (pre-`paleo_emu` code refactor) to maintain consistency with NWS reports. The new-emulator natural results are archived in `site_data_more/` (gitignored). See `site_data_more/README.md` for details.
+
 #### 5b — Plot notebooks
+
+**Low-resolution (global emulator)** — reads from `site_data/lowres_results/`:
 
 | Notebook | Figure | Requires |
 |----------|--------|----------|
 | `Plot_Figure3.1_CO2+GSL.ipynb` | CO₂ and GSL time series | Stage 2 outputs |
-| `Plot_FigureA1_Get_regime_threshold.ipynb` | SAT at GSL thresholds → set regime bounds | `tas` site data |
-| `Plot_Figure3.4_prediction_on_site.ipynb` | All members + mean, per variable per scenario | site data |
-| `Plot_Figure3.5_strip_SAT.ipynb` | Stacked area: warm/cold/mid SAT regimes | `tas` site data |
-| `Plot_Figure3.6_strip_IS.ipynb` | Stacked area: ice sheet presence | `ice_sheet` site data |
-| `Plot_Figure3.6(1)_strip_IS_4regime.ipynb` | 4 regimes (aerial/undersea × ice/no-ice), 90 members | `ice_sheet` + GSL |
-| `Plot_Figure3.6(2)_strip_IS_4regime_member67.ipynb` | Same 4 regimes, member 67 only | `ice_sheet` + GSL |
-| `Plot_Figure3.6(3)_strip_IS_member67.ipynb` | Ice sheet strip, member 67 | `ice_sheet` site data |
-| `Check_iceconc_on_UK.ipynb` | Diagnostic: sea ice concentration at UK sites | `iceconc` site data |
+| `Plot_FigureA1_Get_regime_threshold.ipynb` | SAT at GSL thresholds → regime bounds | `tas` lowres |
+| `Plot_Figure3.4_prediction_on_site.ipynb` | All members + mean, per variable per scenario | lowres site data |
+| `Plot_Figure3.5_strip_SAT.ipynb` | Stacked area: warm/cold/mid SAT regimes | `tas` lowres |
+| `Plot_Figure3.6_strip_IS.ipynb` | Stacked area: ice sheet presence | `ice_sheet` lowres |
+| `Plot_Figure3.6(1)_strip_IS_4regime.ipynb` | 4 regimes, 90 members | `ice_sheet` + GSL |
+| `Plot_Figure3.6(2)_strip_IS_4regime_member67.ipynb` | 4 regimes, member 67 | `ice_sheet` + GSL |
+| `Plot_Figure3.6(3)_strip_IS_member67.ipynb` | Ice sheet strip, member 67 | `ice_sheet` lowres |
+| `Check_iceconc_on_UK.ipynb` | Sea ice concentration at UK sites | `iceconc` lowres |
 
-All notebooks read site data from `site_data/` (relative to `5_plots/`).  
+**High-resolution (CHELSA downscaled)** — reads from `site_data/highres_results/`:
+
+| Notebook | Figure | Requires |
+|----------|--------|----------|
+| `Plot_Figure3.14_site_highres.ipynb` | All members, per variable, highres | `tas`/`pr` highres |
+| `Plot_site_highres.ipynb` | Site time series, highres | highres site data |
+| `Plot_Validate_check_site_highres.ipynb` | Validation against lowres | highres + lowres |
+| `Plot_strip_SAT_highres.ipynb` | Strip plot, highres SAT | `tas` highres |
+
+**`site_data/` directory structure:**
+```
+site_data/
+├── lowres_results/    # 90-member lowres site data (all variables, 6 scenarios)
+├── highres_results/   # CHELSA-downscaled tas & pr (112 UK sites, 5 SSP + natural)
+└── (site_data_more/)  # gitignored — new-emulator natural archive
+```
+
 GSL inputs: `../2_GSL_model/results/emul_inputs_updatedCO2/`.
 
 ---

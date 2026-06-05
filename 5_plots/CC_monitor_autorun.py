@@ -26,7 +26,7 @@ import xarray as xr
 HERE        = Path(__file__).parent
 NWS_OUTPUTS = Path("/Volumes/Xin-data/NWS_outputs")
 GSL_PATH    = HERE.parent / "2_GSL_model/results/emul_inputs_updatedCO2"
-SITE_DATA   = HERE / "site_data"
+SITE_DATA   = HERE / "site_data" / "lowres_results"
 NOTEBOOK    = HERE / "Plot_Figure3.4_prediction_on_site.ipynb"
 
 POLL_INTERVAL = 60   # seconds between checks
@@ -93,7 +93,7 @@ def sites_for_var(var):
 def all_sites_done(var, scen):
     sites = sites_for_var(var)
     return all(
-        (SITE_DATA / f"site_{s}" / f"{var}_{scen}_site_{s}.txt").exists()
+        (SITE_DATA / f"{var}_{scen}_site_{s}.txt").exists()
         for s in sites
     )
 
@@ -141,7 +141,7 @@ def run_extraction(var, scen):
                 log.info(f"    {done}/{N_MEMBERS} members done")
 
     for site_name, arr in site_arrays.items():
-        out = SITE_DATA / f"site_{site_name}" / f"{var}_{scen}_site_{site_name}.txt"
+        out = SITE_DATA / f"{var}_{scen}_site_{site_name}.txt"
         header = (
             f"Variable: {var}\nLong name: {LONG_NAMES[var]}\nUnits: {UNITS[var]}\n"
             f"Scenario: {scen}\nSite: {site_name}\n"
@@ -173,9 +173,7 @@ def run_notebook():
 
 def main():
     log.info("Monitor started. Checking every %ds. Stop with Ctrl-C.", POLL_INTERVAL)
-    SITE_DATA.mkdir(parents=True, exist_ok=True)
-    for s in {**LAND_SITES, **SEA_SITES}:
-        (SITE_DATA / f"site_{s}").mkdir(exist_ok=True)
+    SITE_DATA.mkdir(parents=True, exist_ok=True)  # flat: no site_XX subdirs
 
     done_combos = set()   # (var, scen) already extracted this session
 

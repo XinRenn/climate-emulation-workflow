@@ -8,11 +8,11 @@ Ice-state selection per member per timestep:
 
 Input:  /Volumes/Xin-data/NWS_outputs/{var}_{state}_{scen}_{member}_prediction.nc
 GSL:    2_GSL_model/results/emul_inputs_updatedCO2/emul_inputs_{scen}.{member}.updated.res
-Output: site_data/site_{site}/{var}_{scen}_site_{site}.txt
+Output: site_data/lowres_results/{var}_{scen}_site_{site}.txt
 
 NWS naming convention (data_name_guidance.md):
   - Open format: .txt (whitespace-separated, readable by np.loadtxt)
-  - Flat structure: one subfolder per site (site_LA/, site_LB/, ...)
+  - Flat structure: all files directly in site_data/lowres_results/ (no site subfolders)
   - Meaningful names: {variable}_{scenario}_site_{site}.txt
   - Header lines with metadata (variable, scenario, site, units, description)
 """
@@ -30,7 +30,7 @@ import xarray as xr
 _HERE       = Path(__file__).parent
 NWS_OUTPUTS = Path("/Volumes/Xin-data/NWS_outputs")
 GSL_PATH    = _HERE.parent / "2_GSL_model/results/emul_inputs_updatedCO2"
-SITE_DATA   = _HERE / "site_data"  # notebooks in 5_plots/ read from "site_data/"
+SITE_DATA   = _HERE / "site_data" / "lowres_results"  # flat: no site_XX subdirs
 
 N_WORKERS = 8  # parallel member reads; tune to drive bandwidth
 
@@ -108,7 +108,7 @@ def extract_member(var, scen, m, sites):
 def all_sites_done(var, scen, sites):
     """Return True if all output files for this (var, scen) already exist."""
     return all(
-        (SITE_DATA / f"site_{s}" / f"{var}_{scen}_site_{s}.txt").exists()
+        (SITE_DATA / f"{var}_{scen}_site_{s}.txt").exists()
         for s in sites
     )
 
@@ -117,9 +117,7 @@ def all_sites_done(var, scen, sites):
 # Main extraction loop
 # ---------------------------------------------------------------------------
 
-SITE_DATA.mkdir(parents=True, exist_ok=True)
-for site in {**LAND_SITES, **SEA_SITES}:
-    (SITE_DATA / f"site_{site}").mkdir(exist_ok=True)
+SITE_DATA.mkdir(parents=True, exist_ok=True)  # flat: no site_XX subdirs
 
 for var in VARS:
     sites = SEA_SITES if var == "iceconc" else {**LAND_SITES, **SEA_SITES}
@@ -154,9 +152,9 @@ for var in VARS:
             for arr in site_arrays.values():
                 np.clip(arr, 0.0, None, out=arr)
 
-        # Save per site
+        # Save per site (flat — no site_XX subdir)
         for site_name, arr in site_arrays.items():
-            out_file = SITE_DATA / f"site_{site_name}" / f"{var}_{scen}_site_{site_name}.txt"
+            out_file = SITE_DATA / f"{var}_{scen}_site_{site_name}.txt"
             header = (
                 f"Variable: {var}\n"
                 f"Long name: {LONG_NAMES[var]}\n"

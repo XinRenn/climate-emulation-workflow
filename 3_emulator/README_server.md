@@ -39,10 +39,17 @@ Edit `prediction.yml` to set paths and model parameters before running.
 
 ## Outputs
 
-NetCDF predictions saved to `/Volumes/Xin-data/result/` (external drive):
-`{model_run_name}_{scenario}_{member}_predictions.nc`
+NetCDF predictions saved to the server `outputs/` directory, then pulled locally by the rsync daemon to `/Volumes/Xin-data/NWS_outputs/`:
 
-Each file contains the predicted field and `std` (GP uncertainty).
+```
+{var}_{state}_{scenario}_{member}_prediction.nc
+```
+
+Example: `tas_modhighice_SSP585_42_prediction.nc`
+
+Each file contains two fields: `var` (emulator mean) and `var_std` (GP posterior uncertainty).
+
+> **Note on PCA config:** `prediction.yml` has both `n_components` and `pca_variance_ratio`. When `pca_variance_ratio` is set, it takes priority over `n_components` — use only one field to avoid ambiguity.
 
 ## LOO Validation
 
@@ -50,10 +57,14 @@ Scripts in `LOO_validation/`. Run `LOO_emulation_loop.py` which calls `LOO_emula
 
 Performance criterion: hold-out R² > 0.95.
 
-## Site Extraction
+## Site Extraction (low-resolution)
 
-After generating global NetCDF predictions, extract values at 112 UK repository sites using:
-- `UK_site_data/get_data_for_each_site.ipynb`
-- `4_plots/Make_site_txt.py`
+After the rsync daemon pulls prediction files to `/Volumes/Xin-data/NWS_outputs/`, extract values at 6 UK HadCM3 grid points locally:
 
-Site indices into the HadCM3 grid are pre-computed in `UK_site_data/UK_sites_index.res`.
+```bash
+cd 5_plots/
+python Run1_extract_uk_sites.py
+```
+
+Output: `5_plots/site_data/lowres_results/{var}_{scenario}_site_{site}.txt`  
+Site indices: `UK_site_data/UK_sites_index.res`

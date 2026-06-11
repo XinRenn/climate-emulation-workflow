@@ -53,7 +53,6 @@ CO2_*_ppmv.txt
 emul_inputs_*.res
 updated_CO2_*.res
 
-toClaude/
 worklog.md
 3_emulator/rsync_nws.sh
 3_emulator/trained_model/tas_modhighice_fitted_pipeline.joblib
